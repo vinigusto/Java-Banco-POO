@@ -171,8 +171,8 @@ public class Aplicacao {
 			return;
 		}
 
-		int opcao = 0;
-		double valor = 0;
+		int opcao;
+		double valor;
 
 		do{
 			System.out.print("\nEscolha a operacao (1 - Retirada, 2 - Deposito, 3 - Transferencia, 4 - Emitir Extrato, 0 - Sair): ");

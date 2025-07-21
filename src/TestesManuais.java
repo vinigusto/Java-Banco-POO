@@ -1,5 +1,3 @@
-import java.util.List;
-
 public class TestesManuais {
 	public void executarTestes() {
 		System.out.println("=== INÍCIO DOS TESTES MANUAIS ===");
