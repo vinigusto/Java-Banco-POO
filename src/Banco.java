@@ -14,8 +14,8 @@ public class Banco
 		this.contas = new ArrayList<>();
 	}
 
-	public void abrirNovaConta(Cliente cliente, boolean contaEspecial) {
-		ContaCorrente novaConta = new ContaCorrente(cliente, contaEspecial);
+	public void abrirNovaConta(Cliente cliente, double saldoInicial, boolean contaEspecial) {
+		ContaCorrente novaConta = new ContaCorrente(cliente, saldoInicial, contaEspecial);
 		contas.add(novaConta);
 	}
 

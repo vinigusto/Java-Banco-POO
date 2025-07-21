@@ -3,6 +3,7 @@ import java.util.*;
 public class Aplicacao {
 	private List<Banco> bancos = new ArrayList<>();
 	private List<Cliente> clientes = new ArrayList<>();
+
 	private static final Scanner entrada = new Scanner(System.in);
 	boolean sair = false;
 	int opcao = 0;
@@ -69,7 +70,7 @@ public class Aplicacao {
 	}
 
 	public void criarCliente(){
-		System.out.print("Nome do Cliente: ");
+		System.out.print("Nome do Titular: ");
 		String nome = entrada.nextLine();
 		System.out.print("Endereco: ");
 		String endereco = entrada.nextLine();
@@ -83,10 +84,9 @@ public class Aplicacao {
 
 	public void listarClientes(){
 		for(int i = 0; i < clientes.size(); i++){
-			System.out.printf("Cliente %d: %s | %s | %.02f.\n", i+1,
+			System.out.printf("Titular %d: %s | %s.\n", i+1,
 					clientes.get(i).getNome(),
-					clientes.get(i).getEndereco(),
-					clientes.get(i).getSaldo());
+					clientes.get(i).getEndereco());
 		}
 	}
 
@@ -105,8 +105,10 @@ public class Aplicacao {
 			return;
 		}
 
-		if (cliente.getSaldo() > 10000) banco.abrirNovaConta(cliente, true);
-		else banco.abrirNovaConta(cliente, false);
+		System.out.print("Saldo Inicial: ");
+		double saldo = entrada.nextDouble();
+		boolean ehContaEspecial = saldo > 10000;
+		banco.abrirNovaConta(cliente, saldo, ehContaEspecial);
 
 		System.out.printf("Nova conta criada para %s no banco %s.\n", cliente.getNome(), banco.getNome());
 	}
@@ -125,25 +127,31 @@ public class Aplicacao {
 		return null;
 	}
 
+	public ContaCorrente buscarConta(Banco banco, String nomeCliente){
+		for(ContaCorrente c: banco.getContas()){
+			if(c.getCliente().getNome().equalsIgnoreCase(nomeCliente)) return c;
+		}
+		return null;
+	}
+
 	public void listarContas(){
 		if(bancos.isEmpty())
 		{
-			System.out.println("Nao existem bancos cadastrados.");
+			System.out.print("Nao existem bancos cadastrados.");
 			return;
 		}
-		System.out.print("#######################\n");
 		for(Banco b: bancos)
 		{
-			System.out.printf("### Banco: %s. \n", b.getNome());
+			System.out.printf("\n### Banco: %s. \n", b.getNome());
 			if(b.getContas().isEmpty()){
 				System.out.println("Nao existem clientes cadastrados.");
 			}else{
 				for(ContaCorrente c : b.getContas()){
-					System.out.printf("%s | ", c.getCliente().getNome());
+					Cliente cliente = c.getCliente();
+					System.out.printf("%s | Titular: %s | Saldo: %.02f.\n",
+							cliente.getNome(), c.getTipoDeConta() ? "Especial" : "Basica", c.getSaldo());
 				}
 			}
-
-			System.out.print("\n#######################\n");
 		}
 	}
 
@@ -155,26 +163,68 @@ public class Aplicacao {
 			return;
 		}
 
-		listarContas();
-		System.out.print("Conta: ");
+		System.out.print("Nome do Cliente da Conta: ");
+		String nomeCliente = entrada.nextLine();
+		ContaCorrente conta = buscarConta(banco, nomeCliente);
+		if (conta == null) {
+			System.out.println("Conta nao encontrada.");
+			return;
+		}
 
 		int opcao = 0;
+		double valor = 0;
+
 		do{
-			System.out.print("Escolha a operacao (1 - Retirada, 2 - Deposito, 3 - Transferencia):");
-			opcao = entrada.nextInt();
+			System.out.print("\nEscolha a operacao (1 - Retirada, 2 - Deposito, 3 - Transferencia, 4 - Emitir Extrato, 0 - Sair): ");
+			opcao = Integer.parseInt(entrada.nextLine());
+
 			switch(opcao){
 				case 1:
+					System.out.print("Digite o valor de Retirada: ");
+					valor = Double.parseDouble(entrada.nextLine());
+					conta.retirada(valor, false);
 
 					break;
+
 				case 2:
+					System.out.print("Digite o valor de Deposito: ");
+					valor = Double.parseDouble(entrada.nextLine());
+					conta.depositar(valor, false);
 					break;
+
 				case 3:
+					System.out.print("Banco Destino: ");
+					Banco bancoDestino = buscarBanco(entrada.nextLine());
+					if (bancoDestino == null) {
+						System.out.println("Banco destino nao encontrado.");
+						break;
+					}
+
+					System.out.print("Nome do Titular da Conta Destino: ");
+					String nomeDestino = entrada.nextLine();
+					ContaCorrente contaDestino = buscarConta(bancoDestino, nomeDestino);
+					if (contaDestino == null) {
+						System.out.println("Conta destino nao encontrada.");
+						break;
+					}
+
+					System.out.print("Digite o valor de Transferencia: ");
+					valor = Double.parseDouble(entrada.nextLine());
+					conta.transferencia(contaDestino, valor);
+					break;
+
+				case 4:
+					conta.imprimirExtrato();
+					break;
+
+				case 0:
+					System.out.println("Saindo...");
 					break;
 
 				default:
 					System.out.println("OPCAO INVALIDA.");
 			}
-		} while(opcao < 1 || opcao > 3);
+		} while(opcao != 0);
 
 	}
 
@@ -183,15 +233,21 @@ public class Aplicacao {
 		Banco bancobrasil = new Banco("Banco do Brasil");
 
 		Cliente vinicius = new Cliente("Vinicius", "Av. Lorem, 444", 5000);
-		nubank.abrirNovaConta(vinicius, false);
+		nubank.abrirNovaConta(vinicius, 5000,false);
 
-		Cliente camila = new Cliente("Camila", "Rua Ipsum, 321", 10000);
-		nubank.abrirNovaConta(camila, true);
+		Cliente camila = new Cliente("Camila", "Rua Ipsum, 321", 15000);
+		nubank.abrirNovaConta(camila, 15000,	true);
+
+		Cliente marcio = new Cliente("Marcio", "Alameda Brasil, 44A", 12000);
+		bancobrasil.abrirNovaConta(camila, 12000,	true);
 
 		bancos.add(nubank);
 		bancos.add(bancobrasil);
 		clientes.add(vinicius);
 		clientes.add(camila);
+		clientes.add(marcio);
+
+		System.out.println("Dados testes adicionados com sucesso.");
 	}
 
 	public void sair(){

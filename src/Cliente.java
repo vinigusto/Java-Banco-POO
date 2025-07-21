@@ -9,12 +9,11 @@ public class Cliente
 	{
 		this.nome = nome;
 		this.endereco = endereco;
-		this.saldoBancario = saldo;
 	}
 
 	void imprimirDados()
 	{
-		System.out.println("Nome: " + this.nome + " | Endereco: " + this.endereco + " | Saldo Bancario: " + this.saldoBancario);
+		System.out.println("Nome: " + this.nome + " | Endereco: " + this.endereco);
 	}
 
 	public void setNome(String nome){
@@ -25,10 +24,6 @@ public class Cliente
 		this.endereco = endereco;
 	}
 
-	public void setSaldo(double saldo){
-		this.saldoBancario = saldo;
-	}
-
 	public String getNome(){
 		return this.nome;
 	}
@@ -37,7 +32,4 @@ public class Cliente
 		return this.endereco;
 	}
 
-	public double getSaldo(){
-		return this.saldoBancario;
-	}
 }

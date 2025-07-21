@@ -2,31 +2,34 @@ import java.util.ArrayList;
 
 public class ContaCorrente
 {
-
 	private Cliente cliente;
 	private double saldo;
 	private boolean contaEspecial;
 	private ArrayList<Movimentacao> movimentacao;
 
-	public ContaCorrente(Cliente cliente, boolean contaEspecial) {
+	public ContaCorrente(Cliente cliente, double saldoInicial, boolean contaEspecial) {
 		this.cliente = cliente;
 		this.contaEspecial = false;
-		this.saldo = 0.0;
+		this.saldo = saldoInicial;
 		this.movimentacao = new ArrayList<>();
+	}
+
+	private void atualizarTipoDeConta(){
+		if(saldo > 10000) contaEspecial = true;
+		else contaEspecial = false;
 	}
 
 	public void adicionarMovimentacao(String descricao, double valor, boolean depositado) {
 		double valorFinal = depositado ? valor : -valor;
 		movimentacao.add(new Movimentacao(valorFinal, descricao));
+		atualizarTipoDeConta();
 	}
 
 	public void imprimirExtrato()
 	{
-		System.out.println("### Extrato ###");
 		for (Movimentacao m : this.movimentacao) {
 			System.out.println(m);
 		}
-		System.out.println("###############");
 	}
 
 	public void emitirSaldo() {
@@ -51,12 +54,12 @@ public class ContaCorrente
 		else
 		{
 			this.saldo -= valor;
-			if(transferencia == false) adicionarMovimentacao("Retirada: ", -valor, false);
+			if(!transferencia) adicionarMovimentacao("Retirada: ", -valor, false);
 			System.out.println("Retirada: " + (-valor));
 		}
 	}
 
-	public void Transferencia(ContaCorrente contaDestino, double valor)
+	public void transferencia(ContaCorrente contaDestino, double valor)
 	{
 		if(this.saldo - valor < 0)
 		{
@@ -82,7 +85,12 @@ public class ContaCorrente
 		return cliente;
 	}
 
+	public double getSaldo() {
+		return this.saldo;
+	}
+
 	public boolean getTipoDeConta() {
+		atualizarTipoDeConta();
 		return contaEspecial;
 	}
 

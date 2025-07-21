@@ -32,7 +32,7 @@ public class Main {
 		contaMaria.EmitirSaldo();
 
 		System.out.println("\n=== Transferência da Maria para o João ===");
-		contaMaria.Transferencia(contaJoao, 400.0);
+		contaMaria.transferencia(contaJoao, 400.0);
 
 		// Imprimindo extratos
 		System.out.println("\n=== Extrato da conta do João ===");
