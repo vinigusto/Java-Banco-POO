@@ -12,7 +12,6 @@ public class Aplicacao {
 	private static final Scanner entrada = new Scanner(System.in);
 
 	private boolean sair = false;
-	private int opcao = 0;
 
 	public void executar(){
 		mostrarMenu();
@@ -29,7 +28,7 @@ public class Aplicacao {
 		do{
 			mostrarOpcoes();
 			System.out.print("Opcao: ");
-			opcao = Integer.parseInt(entrada.nextLine());
+			int opcao = Integer.parseInt(entrada.nextLine());
 			usuarioEscolheuOpcao(opcao);
 		} while(!sair);
 

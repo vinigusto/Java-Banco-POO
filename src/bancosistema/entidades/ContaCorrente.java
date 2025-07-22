@@ -17,8 +17,7 @@ public class ContaCorrente
 	}
 
 	protected void atualizarTipoDeConta(){
-		if(saldo > 10000) contaEspecial = true;
-		else contaEspecial = false;
+		contaEspecial = saldo > 10000;
 	}
 
 	protected void adicionarMovimentacao(String descricao, double valor, boolean depositado) {
@@ -41,7 +40,7 @@ public class ContaCorrente
 
 	public void depositar(double valor, boolean transferencia, boolean printMsg) {
 		this.saldo += valor;
-		if(transferencia == false) adicionarMovimentacao("Deposito: ", valor, true);
+		if(!transferencia) adicionarMovimentacao("Deposito: ", valor, true);
 		if(printMsg) System.out.println("Deposito: " + valor);
 	}
 
