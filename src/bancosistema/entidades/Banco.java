@@ -1,3 +1,5 @@
+package bancosistema.entidades;
+
 import java.util.ArrayList;
 
 public class Banco
@@ -22,7 +24,7 @@ public class Banco
 	public void listarContas() {
 		for (ContaCorrente conta : contas) {
 			System.out.println("Titular: " + conta.getCliente().getNome());
-			System.out.println("Tipo: " + (conta.getTipoDeConta() ? "Básica" : "Especial"));
+			System.out.println("Tipo: " + (conta.getTipoDeConta() ? "Basica" : "Especial"));
 			System.out.println("---------------------");
 		}
 	}

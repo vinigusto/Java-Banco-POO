@@ -1,3 +1,5 @@
+package bancosistema.entidades;
+
 import java.util.ArrayList;
 
 public class ContaCorrente
@@ -14,12 +16,12 @@ public class ContaCorrente
 		this.movimentacao = new ArrayList<>();
 	}
 
-	private void atualizarTipoDeConta(){
+	protected void atualizarTipoDeConta(){
 		if(saldo > 10000) contaEspecial = true;
 		else contaEspecial = false;
 	}
 
-	public void adicionarMovimentacao(String descricao, double valor, boolean depositado) {
+	protected void adicionarMovimentacao(String descricao, double valor, boolean depositado) {
 		double valorFinal = depositado ? valor : -valor;
 		movimentacao.add(new Movimentacao(valorFinal, descricao));
 		atualizarTipoDeConta();
@@ -30,19 +32,20 @@ public class ContaCorrente
 		for (Movimentacao m : this.movimentacao) {
 			System.out.println(m);
 		}
+		if(movimentacao.isEmpty()) System.out.println("Extrato vazio.");
 	}
 
 	public void emitirSaldo() {
 		System.out.println("-> SALDO ATUAL: " + this.saldo);
 	}
 
-	public void depositar(double valor, boolean transferencia) {
+	public void depositar(double valor, boolean transferencia, boolean printMsg) {
 		this.saldo += valor;
 		if(transferencia == false) adicionarMovimentacao("Deposito: ", valor, true);
-		System.out.println("Deposito: " + valor);
+		if(printMsg) System.out.println("Deposito: " + valor);
 	}
 
-	public void retirada(double valor, boolean transferencia) {
+	public void retirada(double valor, boolean transferencia, boolean printMsg) {
 		if(this.saldo - valor < 0)
 		{
 			if(!contaEspecial)
@@ -55,11 +58,11 @@ public class ContaCorrente
 		{
 			this.saldo -= valor;
 			if(!transferencia) adicionarMovimentacao("Retirada: ", -valor, false);
-			System.out.println("Retirada: " + (-valor));
+			if(printMsg) System.out.println("Retirada: " + (-valor));
 		}
 	}
 
-	public void transferencia(ContaCorrente contaDestino, double valor)
+	public void transferencia(ContaCorrente contaDestino, double valor, boolean printMsg)
 	{
 		if(this.saldo - valor < 0)
 		{
@@ -71,13 +74,12 @@ public class ContaCorrente
 		}
 		else
 		{
-			retirada(valor, true);
+			retirada(valor, true, false);
 			adicionarMovimentacao("Transferencia para " + contaDestino.cliente.getNome(), -valor, false);
 
-			contaDestino.depositar(valor, true);
+			contaDestino.depositar(valor, true, false);
 			contaDestino.adicionarMovimentacao("Transferencia recebida de " + cliente.getNome(), valor, true);
-
-			System.out.println("Transferencia Realizada com Sucesso para " + contaDestino.cliente.getNome());
+			if(printMsg) System.out.printf("Transferencia Realizada com Sucesso para '%s'.\n", contaDestino.cliente.getNome());
 		}
 	}
 
@@ -92,9 +94,5 @@ public class ContaCorrente
 	public boolean getTipoDeConta() {
 		atualizarTipoDeConta();
 		return contaEspecial;
-	}
-
-	public ArrayList<Movimentacao> getMovimentacao() {
-		return movimentacao;
 	}
 }

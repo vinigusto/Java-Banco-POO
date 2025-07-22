@@ -1,23 +1,34 @@
+package bancosistema.interfaceusuario;
+
+import bancosistema.entidades.Banco;
+import bancosistema.entidades.Cliente;
+import bancosistema.entidades.ContaCorrente;
+
 import java.util.*;
 
 public class Aplicacao {
 	private List<Banco> bancos = new ArrayList<>();
 	private List<Cliente> clientes = new ArrayList<>();
-
 	private static final Scanner entrada = new Scanner(System.in);
-	boolean sair = false;
-	int opcao = 0;
+
+	private boolean sair = false;
+	private int opcao = 0;
 
 	public void executar(){
 		mostrarMenu();
 	}
 
-	public void mostrarMenu(){
-		System.out.println("=== BEM-VINDO AO NOSSO SISTEMA ===");
+	private void mostrarCabecalho(){
+		System.out.println("=========================================");
+		System.out.println("=== BEM-VINDO AO MEU SISTEMA BANCARIO ===");
+		System.out.println("=========================================");
+	}
 
+	private void mostrarMenu(){
+		mostrarCabecalho();
 		do{
 			mostrarOpcoes();
-			System.out.print("Opcao Escolhida: ");
+			System.out.print("Opcao: ");
 			opcao = Integer.parseInt(entrada.nextLine());
 			usuarioEscolheuOpcao(opcao);
 		} while(!sair);
@@ -26,20 +37,14 @@ public class Aplicacao {
 		entrada.close();
 	}
 
-	public void mostrarOpcoes(){
-		System.out.println("\nO que voce deseja fazer?");
-		System.out.println("1 - Criar Banco");
-		System.out.println("2 - Listar Bancos");
-		System.out.println("3 - Criar Cliente");
-		System.out.println("4 - Listar Clientes");
-		System.out.println("5 - Abrir Conta do Cliente no Banco");
-		System.out.println("6 - Listar Contas do Banco");
-		System.out.println("7 - Realizar Operacoes Bancarias");
-		System.out.println("11 - Adicionar Dados de Teste");
-		System.out.println("0 - Sair");
+	private void mostrarOpcoes(){
+		System.out.println("\n### MENU PRINCIPAL ###");
+		System.out.println("1. Criar Banco     2. Listar Bancos    3. Criar Cliente");
+		System.out.println("4. Listar Clientes 5. Abrir Conta      6. Listar Contas");
+		System.out.println("7. Operacoes       8. Dados Teste      0. Sair");
 	}
 
-	public void usuarioEscolheuOpcao(int opcao){
+	private void usuarioEscolheuOpcao(int opcao){
 		switch (opcao){
 			case 1 -> criarBanco();
 			case 2 -> listarBancos();
@@ -48,41 +53,39 @@ public class Aplicacao {
 			case 5 -> abrirConta();
 			case 6 -> listarContas();
 			case 7 -> realizarOperacoes();
-			case 11 -> adicionarDadosTeste();
+			case 8 -> adicionarDadosTeste();
 			case 0 -> sair = true;
 			default -> System.out.println("OPCAO INVALIDA. Tente novamente.");
 		}
 	}
 
-	public void criarBanco(){
+	private void criarBanco(){
 		System.out.print("Nome do Banco: ");
 
 		String nome = entrada.nextLine();
 		bancos.add(new Banco(nome));
 
-		System.out.println("Banco criado.");
+		System.out.printf("Banco '%s' criado.\n", nome);
 	}
 
-	public void listarBancos(){
+	private void listarBancos(){
 		for(int i = 0; i < bancos.size(); i++){
 			System.out.printf("Banco %d: %s.\n", i+1, bancos.get(i).getNome());
 		}
 	}
 
-	public void criarCliente(){
+	private void criarCliente(){
 		System.out.print("Nome do Titular: ");
 		String nome = entrada.nextLine();
 		System.out.print("Endereco: ");
 		String endereco = entrada.nextLine();
-		System.out.print("Saldo: ");
-		double saldo = Double.parseDouble(entrada.nextLine());
 
-		clientes.add(new Cliente(nome, endereco, saldo));
+		clientes.add(new Cliente(nome, endereco));
 
-		System.out.println("Cliente criado com sucesso.");
+		System.out.printf("Cliente '%s' criado com sucesso.\n", nome);
 	}
 
-	public void listarClientes(){
+	private void listarClientes(){
 		for(int i = 0; i < clientes.size(); i++){
 			System.out.printf("Titular %d: %s | %s.\n", i+1,
 					clientes.get(i).getNome(),
@@ -90,51 +93,51 @@ public class Aplicacao {
 		}
 	}
 
-	public void abrirConta() {
+	private void abrirConta() {
 		System.out.print("Banco: ");
 		Banco banco = buscarBanco(entrada.nextLine());
 		if (banco == null) {
-			System.out.println("Banco nao encontrado.");
+			System.out.printf("Banco '%s' nao encontrado.\n", banco);
 			return;
 		}
 
 		System.out.print("Cliente: ");
 		Cliente cliente = buscarCliente(entrada.nextLine());
 		if (cliente == null) {
-			System.out.println("Cliente nao encontrado.");
+			System.out.printf("Cliente '%s' nao encontrado.\n", cliente);
 			return;
 		}
 
 		System.out.print("Saldo Inicial: ");
-		double saldo = entrada.nextDouble();
+		double saldo = Double.parseDouble(entrada.nextLine());
 		boolean ehContaEspecial = saldo > 10000;
 		banco.abrirNovaConta(cliente, saldo, ehContaEspecial);
 
-		System.out.printf("Nova conta criada para %s no banco %s.\n", cliente.getNome(), banco.getNome());
+		System.out.printf("Nova conta criada para '%s' no banco '%s'.\n", cliente.getNome(), banco.getNome());
 	}
 
-	public Banco buscarBanco(String nome){
+	private Banco buscarBanco(String nome){
 		for(Banco b: bancos){
 			if(b.getNome().equalsIgnoreCase(nome)) return b;
 		}
 		return null;
 	}
 
-	public Cliente buscarCliente(String nome){
+	private Cliente buscarCliente(String nome){
 		for(Cliente c: clientes){
 			if(c.getNome().equalsIgnoreCase(nome)) return c;
 		}
 		return null;
 	}
 
-	public ContaCorrente buscarConta(Banco banco, String nomeCliente){
+	private ContaCorrente buscarConta(Banco banco, String nomeCliente){
 		for(ContaCorrente c: banco.getContas()){
 			if(c.getCliente().getNome().equalsIgnoreCase(nomeCliente)) return c;
 		}
 		return null;
 	}
 
-	public void listarContas(){
+	private void listarContas(){
 		if(bancos.isEmpty())
 		{
 			System.out.print("Nao existem bancos cadastrados.");
@@ -155,7 +158,7 @@ public class Aplicacao {
 		}
 	}
 
-	public void realizarOperacoes(){
+	private void realizarOperacoes(){
 		System.out.print("Banco: ");
 		Banco banco = buscarBanco(entrada.nextLine());
 		if (banco == null) {
@@ -163,7 +166,7 @@ public class Aplicacao {
 			return;
 		}
 
-		System.out.print("Nome do Cliente da Conta: ");
+		System.out.print("Nome do Titular da Conta: ");
 		String nomeCliente = entrada.nextLine();
 		ContaCorrente conta = buscarConta(banco, nomeCliente);
 		if (conta == null) {
@@ -175,21 +178,24 @@ public class Aplicacao {
 		double valor;
 
 		do{
-			System.out.print("\nEscolha a operacao (1 - Retirada, 2 - Deposito, 3 - Transferencia, 4 - Emitir Extrato, 0 - Sair): ");
+			System.out.println("\n## OPERACOES ##");
+			System.out.println("1. Retirada        2. Deposito");
+			System.out.println("3. Transferencia   4. Emitir Saldo");
+			System.out.println("5. Emitir Extrato  0. Sair");
+			System.out.print("Opcao: ");
 			opcao = Integer.parseInt(entrada.nextLine());
 
 			switch(opcao){
 				case 1:
 					System.out.print("Digite o valor de Retirada: ");
 					valor = Double.parseDouble(entrada.nextLine());
-					conta.retirada(valor, false);
-
+					conta.retirada(valor, false, true);
 					break;
 
 				case 2:
 					System.out.print("Digite o valor de Deposito: ");
 					valor = Double.parseDouble(entrada.nextLine());
-					conta.depositar(valor, false);
+					conta.depositar(valor, false, true);
 					break;
 
 				case 3:
@@ -210,10 +216,16 @@ public class Aplicacao {
 
 					System.out.print("Digite o valor de Transferencia: ");
 					valor = Double.parseDouble(entrada.nextLine());
-					conta.transferencia(contaDestino, valor);
+					conta.transferencia(contaDestino, valor, true);
 					break;
 
 				case 4:
+					System.out.println("Emitindo saldo...");
+					conta.emitirSaldo();
+					break;
+
+				case 5:
+					System.out.println("Emitindo extrato...");
 					conta.imprimirExtrato();
 					break;
 
@@ -228,29 +240,37 @@ public class Aplicacao {
 
 	}
 
-	public void adicionarDadosTeste(){
+	private void adicionarDadosTeste(){
 		Banco nubank = new Banco("Nubank");
 		Banco bancobrasil = new Banco("Banco do Brasil");
+		Banco caixa = new Banco("Caixa");
 
-		Cliente vinicius = new Cliente("Vinicius", "Av. Lorem, 444", 5000);
+		Cliente vinicius = new Cliente("Vinicius", "Av. Lorem, 444");
+		Cliente camila = new Cliente("Camila", "Rua Ipsum, 321");
+		Cliente marcio = new Cliente("Marcio", "Alameda Brasil, 44A");
+
 		nubank.abrirNovaConta(vinicius, 5000,false);
-
-		Cliente camila = new Cliente("Camila", "Rua Ipsum, 321", 15000);
 		nubank.abrirNovaConta(camila, 15000,	true);
-
-		Cliente marcio = new Cliente("Marcio", "Alameda Brasil, 44A", 12000);
-		bancobrasil.abrirNovaConta(camila, 12000,	true);
+		bancobrasil.abrirNovaConta(marcio, 12000,	true);
 
 		bancos.add(nubank);
 		bancos.add(bancobrasil);
+		bancos.add(caixa);
 		clientes.add(vinicius);
 		clientes.add(camila);
 		clientes.add(marcio);
 
+		ContaCorrente contaVinicius = nubank.getContas().get(0);
+		contaVinicius.depositar(1000, false, false);
+		contaVinicius.retirada(300, false, false);
+
+		ContaCorrente contaCamila = nubank.getContas().get(1);
+		contaCamila.transferencia(contaVinicius, 2000, false);
+
 		System.out.println("Dados testes adicionados com sucesso.");
 	}
 
-	public void sair(){
+	private void sair(){
 		System.out.println("Obrigado!");
 		System.out.println("Saindo do programa...");
 	}

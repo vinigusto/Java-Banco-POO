@@ -1,3 +1,5 @@
+package bancosistema.entidades;
+
 public class Movimentacao
 {
 	private double valor;
@@ -10,6 +12,6 @@ public class Movimentacao
 
 	@Override
 	public String toString() {
-		return descricao + ": R$ " + valor;
+		return descricao + " R$ " + valor;
 	}
 }

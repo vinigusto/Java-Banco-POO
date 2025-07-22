@@ -41,11 +41,11 @@ Este projeto simula as operações básicas de um sistema bancário, incluindo:
 
 ## 📂 Estrutura do Projeto
 
-- `Aplicacao.java`: Classe principal com o menu interativo
-- `Banco.java`: Representa um banco e suas contas
-- `Cliente.java`: Armazena dados dos clientes
-- `ContaCorrente.java`: Implementa operações bancárias
-- `Movimentacao.java`: Registra transações financeiras
+- `bancosistema.interfaceusuario.Aplicacao.java`: Classe principal com o menu interativo
+- `bancosistema.entidades.Banco.java`: Representa um banco e suas contas
+- `bancosistema.entidades.Cliente.java`: Armazena dados dos clientes
+- `bancosistema.entidades.ContaCorrente.java`: Implementa operações bancárias
+- `bancosistema.entidades.Movimentacao.java`: Registra transações financeiras
 - `Main.java`: Ponto de entrada do programa
 
 ## 📝 Observações
