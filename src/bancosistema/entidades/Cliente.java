@@ -15,9 +15,15 @@ public class Cliente
 	public String getNome(){
 		return this.nome;
 	}
-
 	public String getEndereco(){
 		return this.endereco;
 	}
 
+	public void alterarNome(String novo){
+		nome = novo;
+	}
+
+	public void alterarEndereco(String novo){
+		endereco = novo;
+	}
 }

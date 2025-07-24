@@ -39,8 +39,9 @@ public class Aplicacao {
 	private void mostrarOpcoes(){
 		System.out.println("\n### MENU PRINCIPAL ###");
 		System.out.println("1. Criar Banco     2. Listar Bancos    3. Criar Cliente");
-		System.out.println("4. Listar Clientes 5. Abrir Conta      6. Listar Contas");
-		System.out.println("7. Operacoes       8. Dados Teste      0. Sair");
+		System.out.println("4. Editar Cliente  5. Listar Clientes  6. Abrir Conta");
+		System.out.println("7. Listar Contas   8. Operacoes        9. Dados Teste");
+		System.out.println("0. Sair");
 	}
 
 	private void usuarioEscolheuOpcao(int opcao){
@@ -48,11 +49,12 @@ public class Aplicacao {
 			case 1 -> criarBanco();
 			case 2 -> listarBancos();
 			case 3 -> criarCliente();
-			case 4 -> listarClientes();
-			case 5 -> abrirConta();
-			case 6 -> listarContas();
-			case 7 -> realizarOperacoes();
-			case 8 -> adicionarDadosTeste();
+			case 4 -> editarCliente();
+			case 5 -> listarClientes();
+			case 6 -> abrirConta();
+			case 7 -> listarContas();
+			case 8 -> realizarOperacoes();
+			case 9 -> adicionarDadosTeste();
 			case 0 -> sair = true;
 			default -> System.out.println("OPCAO INVALIDA. Tente novamente.");
 		}
@@ -82,6 +84,47 @@ public class Aplicacao {
 		clientes.add(new Cliente(nome, endereco));
 
 		System.out.printf("Cliente '%s' criado com sucesso.\n", nome);
+	}
+
+	private void editarCliente(){
+		System.out.print("Nome do Cliente: ");
+		String nome = entrada.nextLine();
+
+		Cliente cliente = (buscarCliente(nome));
+		if(cliente == null){
+			System.out.println("Cliente nao encontrado.");
+			return;
+		}
+
+		boolean escolhaValida = false;
+		int opcao;
+		do{
+			System.out.println("1. Alterar Nome   2. Alterar Endereco   0. Sair");
+			System.out.print("Opcao: ");
+			opcao = Integer.parseInt(entrada.nextLine());
+
+			switch (opcao){
+				case 1:
+					System.out.print("Novo Nome: ");
+					String novoNome = entrada.nextLine();
+					cliente.alterarNome(novoNome);
+					System.out.printf("Nome do cliente '%s' foi alterado para '%s'\n", nome, novoNome);
+					break;
+
+				case 2:
+					System.out.print("Novo Endereco: ");
+					String novoEndereco = entrada.nextLine();
+					cliente.alterarEndereco(novoEndereco);
+					System.out.printf("Endereco do cliente '%s' foi alterado para '%s'\n", nome, novoEndereco);
+					break;
+
+				default:
+					System.out.println("OPCAO INVALIDA. Tente novamente.");
+					break;
+			}
+
+			if(opcao == 2 || opcao == 1) escolhaValida = true;
+		}while(!escolhaValida);
 	}
 
 	private void listarClientes(){
