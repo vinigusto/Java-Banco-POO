@@ -6,6 +6,7 @@ Um projeto simples de sistema bancário desenvolvido em Java para a disciplina d
 
 Este projeto simula as operações básicas de um sistema bancário, incluindo:
 - Cadastro de bancos e clientes
+- Edição dos dados dos clientes
 - Abertura de contas correntes (básicas e especiais)
 - Operações bancárias (depósito, saque e transferência)
 - Gerenciamento de movimentações financeiras
