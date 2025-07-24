@@ -1,6 +1,6 @@
 # Sistema Bancário em Java
 
-Um projeto simples de sistema bancário desenvolvido em Java para a disciplina de Programação Orientada a Objetos na Universidade Federal de Uberlândia (UFU).
+Um projeto de sistema bancário desenvolvido em Java para a disciplina de Programação Orientada a Objetos na Universidade Federal de Uberlândia (UFU).
 
 ## 📋 Descrição
 
